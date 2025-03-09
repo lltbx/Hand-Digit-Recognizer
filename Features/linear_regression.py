@@ -14,9 +14,12 @@ def closed_form(X, Y, lambda_factor):
         theta - (d + 1, ) NumPy array containing the weights of linear regression. Note that theta[0]
         represents the y-axis intercept of the model and therefore X[0] = 1
     """
-    
-    
-    theta = (X)
+    Xs = np.dot(X.T,X)
+    I = np.identity(X.shape[1]) 
+    Ls  = lambda_factor*I
+    Xy = np.dot(X.T,Y)
+    Xy = Xy.flatten()
+    theta = np.linalg.solve(Xs + Ls,Xy)
     return theta
 
 
