@@ -90,7 +90,7 @@ print('Multiclass SVM test_error:', run_multiclass_svm_on_MNIST())
 # TODO: first fill out functions in softmax.py, or run_softmax_on_MNIST will not work
 
 
-def run_softmax_on_MNIST(temp_parameter=1):
+def run_softmax_on_MNIST(temp_parameter=2):
     """
     Trains softmax, classifies test data, computes test error, and plots cost function
 

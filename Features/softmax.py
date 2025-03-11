@@ -31,13 +31,17 @@ def compute_probabilities(X, theta, temp_parameter):
     Returns:
         H - (k, n) NumPy array, where each entry H[j][i] is the probability that X[i] is labeled as j
     """
-    #YOUR CODE HERE
-    raise NotImplementedError
+    weights = np.dot(X, theta.T)
+    weights_max = np.max(weights, axis=1, keepdims=True)  # Shape: (n, 1)
+    exp_weights = np.exp((weights - weights_max) / temp_parameter)  # Shape: (n, k)
+    denominator = np.sum(exp_weights, axis=1, keepdims=True)  # Shape: (n, 1)
+    H = exp_weights / denominator  # Shape: (n, k)
+    H = H.T  # Shape: (k, n)
+    return H
 
 def compute_cost_function(X, Y, theta, lambda_factor, temp_parameter):
     """
     Computes the total cost over every datapoint.
-
     Args:
         X - (n, d) NumPy array (n datapoints each with d features)
         Y - (n, ) NumPy array containing the labels (a number from 0-9) for each
@@ -50,13 +54,18 @@ def compute_cost_function(X, Y, theta, lambda_factor, temp_parameter):
     Returns
         c - the cost value (scalar)
     """
-    #YOUR CODE HERE
-    raise NotImplementedError
+    n = X.shape[0]
+    H = compute_probabilities(X, theta, temp_parameter)  # Shape: (k, n)
+    log_probs = np.log(H[Y, np.arange(n)] + 1e-10)  # Shape: (n,)
+    cross_entropy_loss = -np.sum(log_probs) / n
+    reg_term = (lambda_factor / 2) * np.sum(theta ** 2)
+    c = cross_entropy_loss + reg_term
+    
+    return c
 
 def run_gradient_descent_iteration(X, Y, theta, alpha, lambda_factor, temp_parameter):
     """
     Runs one step of batch gradient descent
-
     Args:
         X - (n, d) NumPy array (n datapoints each with d features)
         Y - (n, ) NumPy array containing the labels (a number from 0-9) for each
@@ -66,12 +75,26 @@ def run_gradient_descent_iteration(X, Y, theta, alpha, lambda_factor, temp_param
         alpha - the learning rate (scalar)
         lambda_factor - the regularization constant (scalar)
         temp_parameter - the temperature parameter of softmax function (scalar)
-
     Returns:
         theta - (k, d) NumPy array that is the final value of parameters theta
     """
-    #YOUR CODE HERE
-    raise NotImplementedError
+    n = X.shape[0]  # Number of datapoints
+    k = theta.shape[0]  # Number of classes
+
+    # Compute softmax probabilities (H has shape (k, n))
+    H = compute_probabilities(X, theta, temp_parameter)  # Softmax probabilities
+
+    # Create one-hot encoded matrix of labels (Y_one_hot has shape (k, n))
+    Y_one_hot = np.zeros((k, n))
+    Y_one_hot[Y, np.arange(n)] = 1
+
+    # Compute the gradient with temperature correction
+    grad = (-1 / (n * temp_parameter)) * np.dot((Y_one_hot - H), X) + lambda_factor * theta
+
+    # Update theta using gradient descent
+    theta -= alpha * grad
+
+    return theta
 
 def update_y(train_y, test_y):
     """
