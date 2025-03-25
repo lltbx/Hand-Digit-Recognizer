@@ -15,11 +15,11 @@ import math
 
 def rectified_linear_unit(x):
     """ Returns the ReLU of x, or the maximum between 0 and x."""
-    # TODO
+    return max(x,0)
 
 def rectified_linear_unit_derivative(x):
     """ Returns the derivative of ReLU."""
-    # TODO
+    return 1 if x>0 else 0
 
 def output_layer_activation(x):
     """ Linear function, returns input as is. """
@@ -38,8 +38,9 @@ class NeuralNetwork():
             -test_neural_network: uses the parameters specified at the time in order to test that the neural network classifies the points given in testing_points within a margin of error.
     """
 
-    def __init__(self):
+class NeuralNetwork():
 
+    def __init__(self):
         # DO NOT CHANGE PARAMETERS (Initialized to floats instead of ints)
         self.input_to_hidden_weights = np.matrix('1. 1.; 1. 1.; 1. 1.')
         self.hidden_to_output_weights = np.matrix('1. 1. 1.')
@@ -50,26 +51,30 @@ class NeuralNetwork():
         self.testing_points = [(1,1), (2,2), (3,3), (5,5), (10,10)]
 
     def train(self, x1, x2, y):
-
         ### Forward propagation ###
         input_values = np.matrix([[x1],[x2]]) # 2 by 1
-
         # Calculate the input and activation of the hidden layer
-        hidden_layer_weighted_input = # TODO (3 by 1 matrix)
-        hidden_layer_activation = # TODO (3 by 1 matrix)
-
-        output =  # TODO
-        activated_output = # TODO
+        hidden_layer_weighted_input = np.matmul(input_values , self.input_to_hidden_weights)
+        # (3 by 1 matrix)
+        hidden_layer_activation = 1/2*((y - hidden_layer_weighted_input)**2)
+        # (3 by 1 matrix)
+        output =    
+        # TODO
+        activated_output = 
+        # TODO
 
         ### Backpropagation ###
-
         # Compute gradients
-        output_layer_error = # TODO
-        hidden_layer_error = # TODO (3 by 1 matrix)
-
-        bias_gradients = # TODO
-        hidden_to_output_weight_gradients = # TODO
-        input_to_hidden_weight_gradients = # TODO
+        output_layer_error = 
+        # TODO
+        hidden_layer_error = 
+        # TODO (3 by 1 matrix)
+        bias_gradients = 
+        # TODO
+        hidden_to_output_weight_gradients = 
+        # TODO
+        input_to_hidden_weight_gradients = 
+        # TODO
 
         # Use gradients to adjust weights and biases using gradient descent
         self.biases = # TODO
